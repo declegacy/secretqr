@@ -18,6 +18,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -121,6 +122,23 @@
         .link a:hover {
             text-decoration: underline;
         }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -146,6 +164,10 @@
         <div class="link">
             <a href="decrypt.html">Go to Decrypt Page</a>
         </div>
+    </div>
+
+    <div class="footer">
+        <a href="https://github.com/declegacy/secretqr" target="_blank">SecretQR</a> is open source project
     </div>
 
     <script>
