@@ -106,6 +106,84 @@
             margin-bottom: 15px;
             color: #333;
             font-weight: 600;
+            font-size: 18px;
+        }
+
+        .print-instruction {
+            margin-top: 20px;
+            text-align: center;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .decrypt-link {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .decrypt-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .decrypt-link a:hover {
+            text-decoration: underline;
+        }
+
+        .qr-container {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .qr-item {
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .qr-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .qr-description {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
+        .explanation {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 8px;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: left
+        }
+
+        .explanation strong {
+            color: #667eea;
+        }
+
+        .print-button {
+            margin-top: 25px;
+            width: 100%;
+            background: #28a745;
+        }
+
+        .print-button:hover {
+            background: #218838;
         }
 
         .link {
@@ -139,31 +217,56 @@
         .footer a:hover {
             text-decoration: underline;
         }
+
+        @media print {
+            @page {
+                size: portrait;
+            }
+            .print-button {
+                display: none;
+            }
+            .qr-title {
+                display: none;
+            }
+            .footer {
+                display: none;
+            }
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .qr-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Encrypt Content</h1>
 
-        <div class="form-group">
-            <label for="content">Content to Encrypt</label>
-            <textarea id="content" placeholder="Enter your secret message..."></textarea>
+        <div id="formSection">
+            <div class="form-group">
+                <label for="content">Content to Encrypt</label>
+                <textarea id="content" placeholder="Enter your secret message..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter a strong password">
+            </div>
+
+            <button onclick="encryptAndGenerateQR()">Encrypt & Generate QR Code</button>
+
+            <div class="link">
+                <a href="decrypt.html">Go to Decrypt Page</a>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter a strong password">
-        </div>
-
-        <button onclick="encryptAndGenerateQR()">Encrypt & Generate QR Code</button>
-
-        <div id="qrcode">
-            <div class="qr-title">Scan this QR code to decrypt</div>
-        </div>
-
-        <div class="link">
-            <a href="decrypt.html">Go to Decrypt Page</a>
-        </div>
+        <div id="qrcode"></div>
     </div>
 
     <div class="footer">
@@ -188,20 +291,63 @@
             // Encrypt the content using AES
             const encrypted = CryptoJS.AES.encrypt(content, password).toString();
 
+            // Change the title
+            document.querySelector('h1').textContent = 'Encrypted content';
+
+            // Hide the form section
+            document.getElementById('formSection').style.display = 'none';
+
             // Clear previous QR code if any
             const qrcodeDiv = document.getElementById('qrcode');
-            qrcodeDiv.innerHTML = '<div class="qr-title">Scan this QR code to decrypt</div>';
+            qrcodeDiv.innerHTML = `
+                <div class="qr-title">Print these QR codes</div>
+
+                <div class="explanation">
+                    These two QR codes are needed to decrypt the content later. Scan the first QR code to open the decrypt page, and then scan the second QR code on that page to retrieve the encrypted data. 
+                </div>
+
+                <div class="qr-container">
+                    <div class="qr-item">
+                        <div class="qr-label">1. Decrypt Link</div>
+                        <div id="qrLinkContainer"></div>
+                        <div class="qr-description">Scan to open decrypt page</div>
+                    </div>
+
+                    <div class="qr-item">
+                        <div class="qr-label">2. Encrypted Data</div>
+                        <div id="qrDataContainer"></div>
+                        <div class="qr-description">Scan on decrypt page</div>
+                    </div>
+                </div>
+
+                <button class="print-button" onclick="window.print()">Print QR Codes</button>
+            `;
             qrcodeDiv.style.display = 'block';
 
-            // Generate QR code
-            new QRCode(qrcodeDiv, {
+            // Generate QR code for decrypt link
+            new QRCode(document.getElementById('qrLinkContainer'), {
+                text: 'https://declegacy.github.io/secretqr/decrypt.html',
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+
+            // Generate QR code for encrypted data
+            new QRCode(document.getElementById('qrDataContainer'), {
                 text: encrypted,
-                width: 256,
-                height: 256,
+                width: 200,
+                height: 200,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
+
+            // Trigger print dialog after QR codes are rendered
+            setTimeout(() => {
+                window.print();
+            }, 500);
         }
     </script>
 </body>

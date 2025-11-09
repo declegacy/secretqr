@@ -177,27 +177,29 @@
     <div class="container">
         <h1>Decrypt Content</h1>
 
-        <button onclick="startScanner()">Start QR Code Scanner</button>
-        <button class="secondary" onclick="stopScanner()" style="display: none;" id="stopBtn">Stop Scanner</button>
+        <div id="scannerSection">
+            <button onclick="startScanner()">Start QR Code Scanner</button>
+            <button class="secondary" onclick="stopScanner()" style="display: none;" id="stopBtn">Stop Scanner</button>
 
-        <div id="reader"></div>
+            <div id="reader"></div>
 
-        <div class="success" id="successMsg"></div>
-        <div class="error" id="errorMsg"></div>
+            <div class="error" id="errorMsg"></div>
 
-        <div class="form-group" id="passwordSection" style="display: none;">
-            <label for="password">Enter Password to Decrypt</label>
-            <input type="password" id="password" placeholder="Enter the password">
-            <input type="hidden" id="encryptedData">
-            <button onclick="decryptContent()" style="margin-top: 10px;">Decrypt Content</button>
+            <div class="form-group" id="passwordSection" style="display: none;">
+                <label for="password">Enter Password to Decrypt</label>
+                <input type="password" id="password" placeholder="Enter the password">
+                <input type="hidden" id="encryptedData">
+                <button onclick="decryptContent()" style="margin-top: 10px;">Decrypt Content</button>
+            </div>
         </div>
 
+        <div class="success" id="successMsg" style="display:none">Descryption has been succesfully completed!</div>
+
         <div class="result" id="result">
-            <h3>Decrypted Content:</h3>
             <p id="decryptedContent"></p>
         </div>
 
-        <div class="link">
+        <div class="link" id="encryptLink">
             <a href="encrypt.html">Go to Encrypt Page</a>
         </div>
     </div>
@@ -252,8 +254,6 @@
 
             stopScanner();
 
-            document.getElementById('successMsg').textContent = 'QR Code scanned successfully! Please enter the password to decrypt.';
-            document.getElementById('successMsg').style.display = 'block';
             document.getElementById('passwordSection').style.display = 'block';
             document.getElementById('password').focus();
         }
@@ -281,13 +281,18 @@
                     throw new Error('Decryption failed - incorrect password');
                 }
 
+                // Hide the scanner section
+                document.getElementById('scannerSection').style.display = 'none';
+
+                // Change the title
+                document.querySelector('h1').textContent = 'Decrypted Content';
+
+                // Show success message
+                document.getElementById('successMsg').style.display = 'block';
+
                 // Display the decrypted content
                 document.getElementById('decryptedContent').textContent = decryptedText;
                 document.getElementById('result').style.display = 'block';
-                hideMessages();
-
-                document.getElementById('successMsg').textContent = 'Content decrypted successfully!';
-                document.getElementById('successMsg').style.display = 'block';
             } catch (error) {
                 document.getElementById('errorMsg').textContent = 'Decryption failed. Please check your password and try again.';
                 document.getElementById('errorMsg').style.display = 'block';
