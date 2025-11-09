@@ -249,6 +249,15 @@
         }
 
         function onScanSuccess(decodedText, decodedResult) {
+            // Check if the scanned QR code is the decrypt link
+            if (decodedText.includes('declegacy.github.io/secretqr/decrypt') ||
+                decodedText.includes('decrypt.html')) {
+                stopScanner();
+                document.getElementById('errorMsg').textContent = 'You scanned QR Code #1 (Decrypt Link). Please scan QR Code #2 (Encrypted Data) instead.';
+                document.getElementById('errorMsg').style.display = 'block';
+                return;
+            }
+
             scannedData = decodedText;
             document.getElementById('encryptedData').value = decodedText;
 
