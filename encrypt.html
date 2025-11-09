@@ -256,7 +256,7 @@
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter a strong password">
+                <input type="password" id="password" placeholder="Enter a strong password" autocomplete="off" data-lpignore="true" data-form-type="other">
             </div>
 
             <button onclick="encryptAndGenerateQR()">Encrypt & Generate QR Code</button>
@@ -343,11 +343,6 @@
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
-
-            // Trigger print dialog after QR codes are rendered
-            setTimeout(() => {
-                window.print();
-            }, 500);
         }
     </script>
 </body>

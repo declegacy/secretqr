@@ -187,7 +187,7 @@
 
             <div class="form-group" id="passwordSection" style="display: none;">
                 <label for="password">Enter Password to Decrypt</label>
-                <input type="password" id="password" placeholder="Enter the password">
+                <input type="password" id="password" placeholder="Enter the password" autocomplete="off" data-lpignore="true" data-form-type="other">
                 <input type="hidden" id="encryptedData">
                 <button onclick="decryptContent()" style="margin-top: 10px;">Decrypt Content</button>
             </div>
