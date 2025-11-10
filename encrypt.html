@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #d5b882 0%, #f1ebda 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -30,11 +30,29 @@
             padding: 40px;
             max-width: 600px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(116, 85, 48, 0.2);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            max-width: 120px;
+            height: auto;
+            margin: 0 auto 10px;
+        }
+
+        .subtitle {
+            color: #745530;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         h1 {
-            color: #333;
+            color: #745530;
             margin-bottom: 30px;
             text-align: center;
         }
@@ -61,7 +79,7 @@
 
         input:focus, textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #745530;
         }
 
         textarea {
@@ -73,7 +91,7 @@
         button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #745530 0%, #d5b882 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -104,7 +122,7 @@
 
         .qr-title {
             margin-bottom: 15px;
-            color: #333;
+            color: #745530;
             font-weight: 600;
             font-size: 18px;
         }
@@ -122,7 +140,7 @@
         }
 
         .decrypt-link a {
-            color: #667eea;
+            color: #745530;
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
@@ -149,7 +167,7 @@
 
         .qr-label {
             font-weight: 600;
-            color: #333;
+            color: #745530;
             margin-bottom: 10px;
             font-size: 16px;
         }
@@ -164,16 +182,16 @@
         .explanation {
             margin-top: 25px;
             padding: 15px;
-            background: #f0f4ff;
+            background: #f1ebda;
             border-radius: 8px;
-            color: #333;
+            color: #745530;
             font-size: 14px;
             line-height: 1.6;
             text-align: left
         }
 
         .explanation strong {
-            color: #667eea;
+            color: #745530;
         }
 
         .print-button {
@@ -192,7 +210,7 @@
         }
 
         .link a {
-            color: #667eea;
+            color: #745530;
             text-decoration: none;
             font-weight: 500;
         }
@@ -205,11 +223,11 @@
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
+            color: #745530;
         }
 
         .footer a {
-            color: white;
+            color: #745530;
             text-decoration: none;
             font-weight: 600;
         }
@@ -226,6 +244,12 @@
                 display: none;
             }
             .qr-title {
+                display: none;
+            }
+            .logo-container {
+                display: none;
+            }
+            .subtitle {
                 display: none;
             }
             .footer {
@@ -246,6 +270,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="logo-container">
+            <img src="logo.png" alt="OrigamiVault Logo" class="logo">
+        </div>
+        <div class="subtitle"><b>OrigamiVault</b> - non digital encrypted storage</div>
         <h1>Encrypt Content</h1>
 
         <div id="formSection">
