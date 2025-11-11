@@ -500,7 +500,7 @@
 
                 <div class="qr-container">
                     <div class="qr-item">
-                        <div class="qr-label dont-print">1. Decrypt App Link</div>
+                        <div class="qr-label dont-print">1. App Link QR Code</div>
                         <div id="qrLinkContainer"></div>
                         <div class="qr-description">
                             <div class="qr-label show-print">1. Decrypt App Link</div>
@@ -515,7 +515,7 @@
                     </div>
 
                     <div class="qr-item">
-                        <div class="qr-label">2. Encrypted Data</div>
+                        <div class="qr-label">2. Encrypted Data QR Code</div>
                         <div id="qrDataContainer"></div>
                         <div class="qr-description">Scan this code on the decrypt web app</div>
 
@@ -552,8 +552,8 @@
             // Generate QR code for encrypted data
             new QRCode(document.getElementById('qrDataContainer'), {
                 text: encrypted,
-                width: 300,
-                height: 300,
+                width: 260,
+                height: 260,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H

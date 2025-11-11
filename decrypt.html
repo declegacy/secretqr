@@ -215,6 +215,7 @@
         </div>
         <div class="subtitle"><b>OrigamiVault</b> - non-digital encrypted storage</div>
         <h1>Decrypt Content</h1>
+        <p style="text-align: center; color: #745530; margin-bottom: 20px; font-size: 14px;">Scan QR code with encrypted data (second/bigger code)</p>
 
         <div id="scannerSection">
             <button onclick="startScanner()">Start QR Code Scanner</button>
@@ -255,6 +256,16 @@
             const readerDiv = document.getElementById('reader');
             readerDiv.style.display = 'block';
             document.getElementById('stopBtn').style.display = 'block';
+
+            // Hide start button
+            document.querySelector('button[onclick="startScanner()"]').style.display = 'none';
+
+            // Hide logo and subtitle when scanning
+            const logoContainer = document.querySelector('.logo-container');
+            const subtitle = document.querySelector('.subtitle');
+            if (logoContainer) logoContainer.style.display = 'none';
+            if (subtitle) subtitle.style.display = 'none';
+
             hideMessages();
 
             html5QrCode = new Html5Qrcode("reader");
@@ -281,6 +292,15 @@
                 html5QrCode.stop().then(() => {
                     document.getElementById('reader').style.display = 'none';
                     document.getElementById('stopBtn').style.display = 'none';
+
+                    // Show start button again
+                    document.querySelector('button[onclick="startScanner()"]').style.display = 'block';
+
+                    // Show logo and subtitle again
+                    const logoContainer = document.querySelector('.logo-container');
+                    const subtitle = document.querySelector('.subtitle');
+                    if (logoContainer) logoContainer.style.display = 'block';
+                    if (subtitle) subtitle.style.display = 'block';
                 }).catch(err => {
                     console.error(err);
                 });
