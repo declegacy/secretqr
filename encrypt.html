@@ -434,13 +434,14 @@
                 return;
             }
 
-            // Encrypt the content using Web Crypto API (AES-GCM, 128-bit)
+            // Encrypt the content using Web Crypto API (AES-CBC, 128-bit)
             const encoder = new TextEncoder();
             const passwordBytes = encoder.encode(password);
             const contentBytes = encoder.encode(content);
 
-            // Generate a random salt for key derivation
-            const salt = crypto.getRandomValues(new Uint8Array(16));
+            // Static salt and IV (for shorter QR codes)
+            const salt = new Uint8Array(16); // All zeros
+            const iv = new Uint8Array(16); // All zeros
 
             // Derive key from password using PBKDF2
             const keyMaterial = await crypto.subtle.importKey(
@@ -459,25 +460,20 @@
                     hash: 'SHA-256'
                 },
                 keyMaterial,
-                { name: 'AES-GCM', length: 128 },
+                { name: 'AES-CBC', length: 128 },
                 false,
                 ['encrypt']
             );
 
-            // Generate random IV
-            const iv = crypto.getRandomValues(new Uint8Array(12));
-
             // Encrypt
             const ciphertext = await crypto.subtle.encrypt(
-                { name: 'AES-GCM', iv: iv },
+                { name: 'AES-CBC', iv: iv },
                 key,
                 contentBytes
             );
 
-            // Format: base64(salt):base64(iv):base64(ciphertext)
-            const encrypted = btoa(String.fromCharCode(...salt)) + ':' +
-                            btoa(String.fromCharCode(...iv)) + ':' +
-                            btoa(String.fromCharCode(...new Uint8Array(ciphertext)));
+            // Format: base64(ciphertext) only
+            const encrypted = btoa(String.fromCharCode(...new Uint8Array(ciphertext)));
 
             // Change the title
             document.querySelector('h1').textContent = 'Encrypted content';
@@ -520,8 +516,8 @@
                         <div class="qr-description">Scan this code on the decrypt web app</div>
 
                         <div class="decrypt-js-code">
-                            <h3>Emergency Javascript decryption code</h3>
-                            <div class="code" onclick="navigator.clipboard.writeText(this.textContent).then(()=>{this.style.background='#4d4d4d'; setTimeout(()=>this.style.background='#2d2d2d', 200)})" title="Click to copy"><code>(async()=>{try{const p=prompt("Enter password:");if(!p)return;const [s,i,c]="${encrypted.replace(/"/g, '\\"')}".split(":");const salt=new Uint8Array(atob(s).split("").map(x=>x.charCodeAt(0)));const iv=new Uint8Array(atob(i).split("").map(x=>x.charCodeAt(0)));const ciphertext=new Uint8Array(atob(c).split("").map(x=>x.charCodeAt(0)));const keyMaterial=await crypto.subtle.importKey("raw",new TextEncoder().encode(p),"PBKDF2",false,["deriveKey"]);const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:salt,iterations:100000,hash:"SHA-256"},keyMaterial,{name:"AES-GCM",length:128},false,["decrypt"]);const decrypted=await crypto.subtle.decrypt({name:"AES-GCM",iv:iv},key,ciphertext);alert(new TextDecoder().decode(decrypted))}catch(e){alert("Failed")}})()</code></div>
+                            <h3>Emergency Javascript decryption code (works offline)</h3>
+                            <div class="code" onclick="navigator.clipboard.writeText(this.textContent).then(()=>{this.style.background='#4d4d4d'; setTimeout(()=>this.style.background='#2d2d2d', 200)})" title="Click to copy"><code>(async()=>{try{const p=prompt("Enter password:");if(!p)return;const c="${encrypted.replace(/"/g, '\\"')}";const salt=new Uint8Array(16);const iv=new Uint8Array(16);const ciphertext=new Uint8Array(atob(c).split("").map(x=>x.charCodeAt(0)));const keyMaterial=await crypto.subtle.importKey("raw",new TextEncoder().encode(p),"PBKDF2",false,["deriveKey"]);const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:salt,iterations:100000,hash:"SHA-256"},keyMaterial,{name:"AES-CBC",length:128},false,["decrypt"]);const decrypted=await crypto.subtle.decrypt({name:"AES-CBC",iv:iv},key,ciphertext);alert(new TextDecoder().decode(decrypted))}catch(e){alert("Failed")}})()</code></div>
                         </div>
                     </div>
                 </div>

@@ -342,17 +342,13 @@
             }
 
             try {
-                // Decrypt using Web Crypto API (AES-GCM, 128-bit)
-                const [saltB64, ivB64, ciphertextB64] = encryptedData.split(':');
-
-                if (!saltB64 || !ivB64 || !ciphertextB64) {
-                    throw new Error('Invalid encrypted data format');
-                }
+                // Decrypt using Web Crypto API (AES-CBC, 128-bit)
+                // Static salt and IV (matching encrypt.html)
+                const salt = new Uint8Array(16); // All zeros
+                const iv = new Uint8Array(16); // All zeros
 
                 // Decode base64 to Uint8Array
-                const salt = new Uint8Array(atob(saltB64).split('').map(c => c.charCodeAt(0)));
-                const iv = new Uint8Array(atob(ivB64).split('').map(c => c.charCodeAt(0)));
-                const ciphertext = new Uint8Array(atob(ciphertextB64).split('').map(c => c.charCodeAt(0)));
+                const ciphertext = new Uint8Array(atob(encryptedData).split('').map(c => c.charCodeAt(0)));
 
                 // Derive key from password
                 const encoder = new TextEncoder();
@@ -374,14 +370,14 @@
                         hash: 'SHA-256'
                     },
                     keyMaterial,
-                    { name: 'AES-GCM', length: 128 },
+                    { name: 'AES-CBC', length: 128 },
                     false,
                     ['decrypt']
                 );
 
                 // Decrypt
                 const decryptedBuffer = await crypto.subtle.decrypt(
-                    { name: 'AES-GCM', iv: iv },
+                    { name: 'AES-CBC', iv: iv },
                     key,
                     ciphertext
                 );
