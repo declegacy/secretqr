@@ -83,6 +83,35 @@
             font-weight: 700;
         }
 
+        h1 .separator {
+            display: inline;
+        }
+
+        h1 .subtitle-text {
+            display: inline;
+            font-size: 27px;
+            background: none;
+            -webkit-text-fill-color: #8b7355;
+            color: #8b7355;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            h1 .separator {
+                display: none;
+            }
+
+            h1 .subtitle-text {
+                display: block;
+                font-size: 19px;
+                font-weight: 600;
+                margin-top: 5px;
+            }
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -432,14 +461,14 @@
         <div class="logo-container">
             <img src="logo.png" alt="OrigamiVault Logo" class="logo">
         </div>
-        <h1><span>OrigamiVault</span> — Encrypted Paper Storage</h1>
+        <h1><span>OrigamiVault</span><span class="separator"> — </span><span class="subtitle-text">Encrypted Paper Storage</span></h1>
 
         <div id="whyLink" style="text-align: center; margin-bottom: 20px;">
             <a href="why.html" style="color: #745530; text-decoration: none; font-size: 14px;">Why use OrigamiVault? See use cases →</a>
         </div>
 
         <div class="explanation" id="securityTip" style="margin-bottom: 20px;">
-            <strong>Security tip:</strong> For better security, turn off internet and use incognito browser mode.
+            <strong>Security tip:</strong> For better security, encrypt only a part of your secret or password. Turn off your internet connection and use an incognito/private browser window when performing encryption or decryption. <a href="strategies.html" style="color: #745530;"> More tips</a>
         </div>
 
         <div id="formSection">

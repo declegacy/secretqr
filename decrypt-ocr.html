@@ -74,6 +74,35 @@
             font-weight: 700;
         }
 
+        h1 .separator {
+            display: inline;
+        }
+
+        h1 .subtitle-text {
+            display: inline;
+            font-size: 27px;
+            background: none;
+            -webkit-text-fill-color: #8b7355;
+            color: #8b7355;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            h1 .separator {
+                display: none;
+            }
+
+            h1 .subtitle-text {
+                display: block;
+                font-size: 19px;
+                font-weight: 600;
+                margin-top: 5px;
+            }
+        }
+
         .explanation {
             padding: 15px;
             background: #f1ebda;
@@ -238,7 +267,7 @@
         <div class="logo-container">
             <a href="encrypt.html"><img src="logo.png" alt="OrigamiVault Logo" class="logo"></a>
         </div>
-        <h1><span>OrigamiVault</span> — OCR Decrypt</h1>
+        <h1><span>OrigamiVault</span><span class="separator"> — </span><span class="subtitle-text">OCR Decrypt</span></h1>
 
         <div class="explanation">
             <strong>How it works:</strong> Use your camera to capture a photo of the printed JavaScript decryption code. The app will use OCR to extract the code and automatically execute it to decrypt your content.

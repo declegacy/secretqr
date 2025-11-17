@@ -73,6 +73,35 @@
             font-weight: 700;
         }
 
+        h1 .separator {
+            display: inline;
+        }
+
+        h1 .subtitle-text {
+            display: inline;
+            font-size: 27px;
+            background: none;
+            -webkit-text-fill-color: #8b7355;
+            color: #8b7355;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            h1 .separator {
+                display: none;
+            }
+
+            h1 .subtitle-text {
+                display: block;
+                font-size: 19px;
+                font-weight: 600;
+                margin-top: 5px;
+            }
+        }
+
         h2 {
             color: #745530;
             margin-top: 30px;
@@ -175,7 +204,7 @@
         <div class="logo-container">
             <img src="logo.png" alt="OrigamiVault Logo" class="logo">
         </div>
-        <h1><span>OrigamiVault</span> — Encrypted Paper Storage</h1>
+        <h1><span>OrigamiVault</span><span class="separator"> — </span><span class="subtitle-text">Encrypted Paper Storage</span></h1>
 
         <div style="text-align: center; margin: 20px 0;">
             <iframe width="560" height="315" src="https://www.youtube.com/embed/zzQkq5Qjri8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="max-width: 100%; border-radius: 8px;"></iframe>

@@ -73,6 +73,35 @@
             font-weight: 700;
         }
 
+        h1 .separator {
+            display: inline;
+        }
+
+        h1 .subtitle-text {
+            display: inline;
+            font-size: 27px;
+            background: none;
+            -webkit-text-fill-color: #8b7355;
+            color: #8b7355;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            h1 .separator {
+                display: none;
+            }
+
+            h1 .subtitle-text {
+                display: block;
+                font-size: 19px;
+                font-weight: 600;
+                margin-top: 5px;
+            }
+        }
+
         .explanation {
             padding: 15px;
             background: #f1ebda;
@@ -232,7 +261,7 @@
         <div class="logo-container">
             <a href="encrypt.html"><img src="logo.png" alt="OrigamiVault Logo" class="logo"></a>
         </div>
-        <h1><span>OrigamiVault</span> — Decrypt Text</h1>
+        <h1><span>OrigamiVault</span><span class="separator"> — </span><span class="subtitle-text">Decrypt Text</span></h1>
 
         <div class="explanation">
             <strong>Paste your encrypted content:</strong> Copy the encrypted base64 string from your printed page (between (S) and (E) markers) and paste it below along with your password to decrypt.
