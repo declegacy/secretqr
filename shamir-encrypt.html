@@ -619,6 +619,10 @@
                             <div class="share-data-label">Manual reconstruct App URL:</div>
                             <div class="share-data">${decryptUrl}</div>
                         </div>
+                        <div class="share-url-section">
+                            <div class="share-data-label">Manual reconstruction JavaScript (run in browser console):</div>
+                            <div class="share-data" style="font-size:9px; line-height:1.3">/*Shamir SSS GF256*/(()=&gt;{const E=new Uint8Array(512),L=new Uint8Array(256);let x=1;for(let i=0;i&lt;255;i++){E[i]=x;E[i+255]=x;L[x]=i;x=x^(x&lt;&lt;1)^(x&amp;128?283:0);x&amp;=255}L[0]=0;const M=(a,b)=&gt;a&amp;&amp;b?E[L[a]+L[b]]:0,D=(a,b)=&gt;a?E[(L[a]+255-L[b])%255]:0,A=(a,b)=&gt;a^b;const shares=[];const t=${threshold};for(let i=0;i&lt;t;i++){const s=prompt(\`Enter share \${i+1} of \${t}:\`);if(!s){alert("Cancelled");return}const m=s.match(/^\\[OV_SSS_(\\d+)_(\\d+)_(\\d+)\\](.+)$/);if(!m){alert("Invalid share format");return}const d=atob(m[4]);shares.push({x:parseInt(m[1]),data:new Uint8Array([...d].map(c=&gt;c.charCodeAt(0)))})}const len=shares[0].data.length,result=new Uint8Array(len);for(let b=0;b&lt;len;b++){let secret=0;for(let i=0;i&lt;shares.length;i++){let num=1,den=1;for(let j=0;j&lt;shares.length;j++)if(i!==j){num=M(num,shares[j].x);den=M(den,A(shares[i].x,shares[j].x))}secret=A(secret,M(shares[i].data[b],D(num,den)))}result[b]=secret}alert(new TextDecoder().decode(result))})()/*${threshold}-of-${totalShares}*/</div>
+                        </div>
                     </div>
                 `).join('')}
                 <button class="print-button" onclick="window.print()">Print All Shares</button>
