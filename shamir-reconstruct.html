@@ -371,7 +371,7 @@
         </div>
 
         <div class="link">
-            <a href="shamir-encrypt.html">Split a New Secret</a>
+            <a href="shamir-split.html">Split a New Secret</a>
         </div>
 
         <div class="link">
@@ -608,6 +608,10 @@
             if (html5QrCode && html5QrCode.isScanning) {
                 html5QrCode.stop().then(() => {
                     startBtn.textContent = 'Scan QR Code';
+                    // Show hidden elements
+                    document.querySelector('.logo-container').style.display = '';
+                    document.querySelector('h1').style.display = '';
+                    document.querySelector('.explanation').style.display = '';
                 });
                 return;
             }
@@ -639,6 +643,10 @@
                 () => {} // Ignore scan errors
             ).then(() => {
                 startBtn.textContent = 'Stop Scanning';
+                // Hide elements to maximize camera space
+                document.querySelector('.logo-container').style.display = 'none';
+                document.querySelector('h1').style.display = 'none';
+                document.querySelector('.explanation').style.display = 'none';
             }).catch(err => {
                 showError("Camera error: " + err);
             });

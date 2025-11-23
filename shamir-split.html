@@ -393,7 +393,7 @@
             <button onclick="splitSecret()">Split into Shares</button>
 
             <div class="link">
-                <a href="shamir-decrypt.html">Go to Shamir Reconstruct Page</a>
+                <a href="shamir-reconstruct.html">Go to Shamir Reconstruct Page</a>
             </div>
 
             <div class="link">
@@ -587,7 +587,7 @@
 
             // Get base URL for decrypt page
             const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
-            const decryptUrl = baseUrl + '/shamir-decrypt.html';
+            const decryptUrl = baseUrl + '/shamir-reconstruct.html';
 
             // Format shares for display
             const shareStrings = shares.map((share, index) => {
@@ -635,11 +635,11 @@
                 `).join('')}
                 <button class="print-button" onclick="window.print()">Print All Shares</button>
                 <div class="link dont-print" style="margin-top: 15px;">
-                    <a href="shamir-decrypt.html">Go to Shamir Reconstruct Page</a>
+                    <a href="shamir-reconstruct.html">Go to Shamir Reconstruct Page</a>
                 </div>
 
                 <div class="link dont-print" style="margin-top: 15px;">
-                    <a href="shamir-encrypt.html">Split Another Secret</a>
+                    <a href="shamir-split.html">Split Another Secret</a>
                 </div>
             `;
 
