@@ -338,21 +338,23 @@
             No shares added yet. Add shares to begin reconstruction.
         </div>
 
-        <div id="sharesList" class="shares-list"></div>
+        <div id="inputSection">
+            <div id="sharesList" class="shares-list"></div>
 
-        <div id="reader"></div>
-        <button id="startScanBtn" onclick="startScanner()">Scan QR Code</button>
+            <div id="reader"></div>
+            <button id="startScanBtn" onclick="startScanner()">Scan QR Code</button>
 
-        <div style="text-align: center; margin: 20px 0; color: #999;">— or —</div>
+            <div style="text-align: center; margin: 20px 0; color: #999;">— or —</div>
 
-        <div class="form-group">
-            <label for="shareInput">Paste Share Data</label>
-            <textarea id="shareInput" placeholder="Paste share data here (e.g., [OV_SSS_1_2_3]base64data...)"></textarea>
-        </div>
-        <button onclick="addPastedShare()">Add Share</button>
+            <div class="form-group">
+                <label for="shareInput">Paste Share Data</label>
+                <textarea id="shareInput" placeholder="Paste share data here (e.g., [OV_SSS_1_2_3]base64data...)"></textarea>
+            </div>
+            <button onclick="addPastedShare()">Add Share</button>
 
-        <div id="reconstructBtn" style="display: none; margin-top: 20px;">
-            <button onclick="reconstructSecret()" style="background: #28a745;">Reconstruct Secret</button>
+            <div id="reconstructBtn" style="display: none; margin-top: 20px;">
+                <button onclick="reconstructSecret()" style="background: #28a745;">Reconstruct Secret</button>
+            </div>
         </div>
 
         <div id="resultBox" class="result-box" style="display: none;">
@@ -562,6 +564,17 @@
                 const decoder = new TextDecoder();
                 const secret = decoder.decode(result);
 
+                // Hide all input elements
+                document.getElementById('inputSection').style.display = 'none';
+                document.getElementById('statusBox').style.display = 'none';
+                document.querySelector('.explanation').style.display = 'none';
+                document.querySelector('.logo-container').style.display = 'none';
+                document.getElementById('errorMsg').style.display = 'none';
+
+                // Update title
+                document.querySelector('h1').innerHTML = '<span>Secret Reconstructed</span>';
+
+                // Show result
                 document.getElementById('resultContent').textContent = secret;
                 document.getElementById('resultBox').style.display = 'block';
 
