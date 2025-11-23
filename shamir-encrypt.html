@@ -228,6 +228,12 @@
             color: #745530;
         }
 
+        .share-data-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
         .share-info {
             margin-top: 10px;
             font-size: 13px;
@@ -237,8 +243,8 @@
         .share-qr-container {
             display: flex;
             gap: 20px;
-            align-items: flex-start;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 15px;
         }
 
@@ -591,19 +597,23 @@
                     <div class="share-card">
                         <h3>Share ${i + 1} of ${totalShares}</h3>
                         <div class="share-qr-container">
+                            <div class="share-qr-link">
+                                <div id="qr-link-${i}"></div>
+                                <div class="qr-label">
+                                    Reconstruct App URL
+                                    <div><em style="font-size:80%">shamir-decrypt.html</em></div>
+                                </div>
+                            </div>
                             <div class="share-qr-main">
                                 <div id="qr-${i}"></div>
                                 <div class="qr-label">Share Data</div>
                             </div>
-                            <div class="share-qr-link">
-                                <div id="qr-link-${i}"></div>
-                                <div class="qr-label">Reconstruct Web App</div>
-                            </div>
                         </div>
+                        <div class="share-data-label">Share Content (plain text):</div>
                         <div class="share-data">${shareStr}</div>
                         <div class="share-info">
                             Requires ${threshold} of ${totalShares} shares to reconstruct<br>
-                            Reconstruct at: ${decryptUrl}
+                            <div style="margin-top:12px">Reconstruct App URL: ${decryptUrl}</div>
                         </div>
                     </div>
                 `).join('')}
@@ -630,8 +640,8 @@
                 // Small QR with just decrypt page URL
                 new QRCode(document.getElementById(`qr-link-${i}`), {
                     text: decryptUrl,
-                    width: 120,
-                    height: 120,
+                    width: 150,
+                    height: 150,
                     colorDark: "#000000",
                     colorLight: "#ffffff",
                     correctLevel: QRCode.CorrectLevel.L
