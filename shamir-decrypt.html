@@ -539,8 +539,18 @@
                 reconstructBtn.style.display = 'none';
             } else {
                 statusEl.className = 'status-box ready';
-                statusEl.textContent = `${collectedShares.length} shares collected. Ready to reconstruct!`;
-                reconstructBtn.style.display = 'block';
+                statusEl.textContent = `${collectedShares.length} shares collected. Reconstructing...`;
+                reconstructBtn.style.display = 'none';
+
+                // Stop camera if scanning
+                if (html5QrCode && html5QrCode.isScanning) {
+                    html5QrCode.stop().then(() => {
+                        document.getElementById('startScanBtn').textContent = 'Scan QR Code';
+                    });
+                }
+
+                // Auto-reconstruct
+                setTimeout(() => reconstructSecret(), 500);
             }
 
             hideError();
