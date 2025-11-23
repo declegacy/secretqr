@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shamir Split | OrigamiVault - Encrypted Paper Storage</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="OrigamiVault - Shamir Secret Sharing">
+    <meta property="og:description" content="Split your secret into multiple shares. Require K of N shares to reconstruct.">
+    <meta property="og:image" content="social.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OrigamiVault - Shamir Secret Sharing">
+    <meta name="twitter:description" content="Split your secret into multiple shares. Require K of N shares to reconstruct.">
+    <meta name="twitter:image" content="social.png">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #d5b882 0%, #f1ebda 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(116, 85, 48, 0.2);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            max-width: 120px;
+            height: auto;
+            margin: 0 auto 10px;
+        }
+
+        .subtitle {
+            color: #745530;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #745530;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 27px;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, #745530 0%, #d5b882 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        h1 .separator {
+            display: inline;
+        }
+
+        h1 .subtitle-text {
+            display: inline;
+            font-size: 27px;
+            background: none;
+            -webkit-text-fill-color: #8b7355;
+            color: #8b7355;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            h1 .separator {
+                display: none;
+            }
+
+            h1 .subtitle-text {
+                display: block;
+                font-size: 19px;
+                font-weight: 600;
+                margin-top: 5px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #745530;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        .shares-config {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .shares-config .form-group {
+            flex: 1;
+        }
+
+        .shares-config select {
+            width: 100%;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #745530 0%, #d5b882 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .explanation {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f1ebda;
+            border-radius: 8px;
+            color: #745530;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .explanation strong {
+            color: #745530;
+        }
+
+        .shares-output {
+            margin-top: 30px;
+        }
+
+        .share-card {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+        }
+
+        .share-card h3 {
+            color: #745530;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .share-qr {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .share-data {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px dashed #d5b882;
+            word-break: break-all;
+            font-family: "Azeret Mono", monospace;
+            font-size: 12px;
+            color: #745530;
+        }
+
+        .share-info {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .print-button {
+            margin-top: 25px;
+            background: #28a745;
+        }
+
+        .print-button:hover {
+            background: #218838;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .link a {
+            color: #745530;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #745530;
+        }
+
+        .footer a {
+            color: #745530;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .dont-print {
+            display: block;
+        }
+
+        @media print {
+            @page {
+                size: portrait;
+                margin: 1cm;
+            }
+
+            * {
+                color: black !important;
+            }
+
+            .dont-print {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .share-card {
+                border: 1px solid #000;
+                page-break-inside: avoid;
+                margin-bottom: 30px;
+            }
+
+            .share-data {
+                border: 1px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container dont-print">
+            <img src="logo.png" alt="OrigamiVault Logo" class="logo">
+        </div>
+        <h1><span>OrigamiVault</span><span class="separator"> — </span><span class="subtitle-text">Shamir Split</span></h1>
+
+        <div class="explanation dont-print" style="margin-bottom: 20px;">
+            <strong>Shamir's Secret Sharing:</strong> Split your secret into multiple shares. You'll need a minimum number of shares to reconstruct the original. No password required - the security is in distributing the shares.
+            <br><br>
+            <strong>Example:</strong> Split into 3 shares, require 2 to reconstruct. Give one to your spouse, one to your lawyer, keep one in your safe. Any 2 shares can recover the secret.
+        </div>
+
+        <div id="formSection">
+            <div class="form-group">
+                <label for="content">Secret to Split</label>
+                <textarea id="content" placeholder="Enter your secret (seed phrase, password, etc.)..."></textarea>
+            </div>
+
+            <div class="shares-config">
+                <div class="form-group">
+                    <label for="totalShares">Total Shares (N)</label>
+                    <select id="totalShares">
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="threshold">Required to Reconstruct (K)</label>
+                    <select id="threshold">
+                        <option value="2" selected>2</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="splitSecret()">Split into Shares</button>
+
+            <div class="link">
+                <a href="shamir-decrypt.html">Go to Reconstruct Page</a> | <a href="encrypt.html">Password Encryption</a>
+            </div>
+        </div>
+
+        <div id="sharesOutput" class="shares-output" style="display: none;"></div>
+    </div>
+
+    <div class="footer dont-print">
+        <a href="https://github.com/origamivault/origamivault" target="_blank">OrigamiVault</a> is open source project
+    </div>
+
+    <script>
+        // ============================================
+        // Shamir's Secret Sharing over GF(256)
+        // ============================================
+
+        // GF(256) with irreducible polynomial x^8 + x^4 + x^3 + x + 1 (0x11B)
+        const EXP_TABLE = new Uint8Array(512);
+        const LOG_TABLE = new Uint8Array(256);
+
+        // Initialize lookup tables
+        (function initTables() {
+            let x = 1;
+            for (let i = 0; i < 255; i++) {
+                EXP_TABLE[i] = x;
+                EXP_TABLE[i + 255] = x;
+                LOG_TABLE[x] = i;
+                x = x ^ (x << 1) ^ (x & 0x80 ? 0x11B : 0);
+                x &= 0xFF;
+            }
+            LOG_TABLE[0] = 0; // log(0) is undefined, but we set it to 0 for convenience
+        })();
+
+        // GF(256) multiplication
+        function gfMul(a, b) {
+            if (a === 0 || b === 0) return 0;
+            return EXP_TABLE[LOG_TABLE[a] + LOG_TABLE[b]];
+        }
+
+        // GF(256) division
+        function gfDiv(a, b) {
+            if (b === 0) throw new Error("Division by zero");
+            if (a === 0) return 0;
+            return EXP_TABLE[(LOG_TABLE[a] + 255 - LOG_TABLE[b]) % 255];
+        }
+
+        // GF(256) addition (same as XOR)
+        function gfAdd(a, b) {
+            return a ^ b;
+        }
+
+        // Evaluate polynomial at x using Horner's method
+        function evaluatePolynomial(coeffs, x) {
+            let result = 0;
+            for (let i = coeffs.length - 1; i >= 0; i--) {
+                result = gfAdd(gfMul(result, x), coeffs[i]);
+            }
+            return result;
+        }
+
+        // Generate random bytes using crypto API
+        function randomBytes(n) {
+            const bytes = new Uint8Array(n);
+            crypto.getRandomValues(bytes);
+            return bytes;
+        }
+
+        // Split a single byte into shares
+        function splitByte(secret, threshold, totalShares) {
+            // coeffs[0] is the secret, rest are random
+            const coeffs = new Uint8Array(threshold);
+            coeffs[0] = secret;
+            const rand = randomBytes(threshold - 1);
+            for (let i = 1; i < threshold; i++) {
+                coeffs[i] = rand[i - 1];
+            }
+
+            const shares = [];
+            for (let i = 1; i <= totalShares; i++) {
+                shares.push({
+                    x: i,
+                    y: evaluatePolynomial(coeffs, i)
+                });
+            }
+            return shares;
+        }
+
+        // Split secret bytes into shares
+        function split(secretBytes, threshold, totalShares) {
+            if (threshold > totalShares) {
+                throw new Error("Threshold cannot be greater than total shares");
+            }
+            if (threshold < 2) {
+                throw new Error("Threshold must be at least 2");
+            }
+            if (totalShares > 255) {
+                throw new Error("Maximum 255 shares supported");
+            }
+
+            const shares = [];
+            for (let i = 0; i < totalShares; i++) {
+                shares.push({ x: i + 1, data: new Uint8Array(secretBytes.length) });
+            }
+
+            for (let byteIndex = 0; byteIndex < secretBytes.length; byteIndex++) {
+                const byteShares = splitByte(secretBytes[byteIndex], threshold, totalShares);
+                for (let i = 0; i < totalShares; i++) {
+                    shares[i].data[byteIndex] = byteShares[i].y;
+                }
+            }
+
+            return shares;
+        }
+
+        // Lagrange interpolation to reconstruct secret byte
+        function reconstructByte(shares) {
+            let secret = 0;
+            for (let i = 0; i < shares.length; i++) {
+                let numerator = 1;
+                let denominator = 1;
+                for (let j = 0; j < shares.length; j++) {
+                    if (i !== j) {
+                        numerator = gfMul(numerator, shares[j].x);
+                        denominator = gfMul(denominator, gfAdd(shares[i].x, shares[j].x));
+                    }
+                }
+                const lagrange = gfDiv(numerator, denominator);
+                secret = gfAdd(secret, gfMul(shares[i].y, lagrange));
+            }
+            return secret;
+        }
+
+        // Reconstruct secret from shares
+        function combine(shares) {
+            if (shares.length < 2) {
+                throw new Error("Need at least 2 shares to reconstruct");
+            }
+
+            const dataLength = shares[0].data.length;
+            const result = new Uint8Array(dataLength);
+
+            for (let byteIndex = 0; byteIndex < dataLength; byteIndex++) {
+                const byteShares = shares.map(s => ({ x: s.x, y: s.data[byteIndex] }));
+                result[byteIndex] = reconstructByte(byteShares);
+            }
+
+            return result;
+        }
+
+        // ============================================
+        // UI Logic
+        // ============================================
+
+        // Update threshold options when total shares changes
+        document.getElementById('totalShares').addEventListener('change', function() {
+            const total = parseInt(this.value);
+            const thresholdSelect = document.getElementById('threshold');
+            const currentThreshold = parseInt(thresholdSelect.value);
+
+            thresholdSelect.innerHTML = '';
+            for (let i = 2; i <= total; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                if (i === Math.min(currentThreshold, total)) {
+                    option.selected = true;
+                }
+                thresholdSelect.appendChild(option);
+            }
+        });
+
+        function splitSecret() {
+            const content = document.getElementById('content').value;
+            const totalShares = parseInt(document.getElementById('totalShares').value);
+            const threshold = parseInt(document.getElementById('threshold').value);
+
+            if (!content) {
+                alert('Please enter a secret to split');
+                return;
+            }
+
+            // Convert to bytes
+            const encoder = new TextEncoder();
+            const secretBytes = encoder.encode(content);
+
+            // Split into shares
+            const shares = split(secretBytes, threshold, totalShares);
+
+            // Get base URL for decrypt page
+            const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '');
+            const decryptUrl = baseUrl + '/shamir-decrypt.html';
+
+            // Format shares for display
+            const shareStrings = shares.map((share, index) => {
+                // Format: [OV_SSS_{shareIndex}_{threshold}_{totalShares}]{base64data}
+                const base64Data = btoa(String.fromCharCode(...share.data));
+                return `[OV_SSS_${share.x}_${threshold}_${totalShares}]${base64Data}`;
+            });
+
+            // Hide form, show shares
+            document.getElementById('formSection').style.display = 'none';
+            document.querySelector('h1').innerHTML = `<span>Shares Generated</span><span class="separator"> — </span><span class="subtitle-text">${threshold} of ${totalShares} required</span>`;
+
+            const outputDiv = document.getElementById('sharesOutput');
+            outputDiv.style.display = 'block';
+            outputDiv.innerHTML = `
+                <div class="explanation dont-print" style="margin-bottom: 20px;">
+                    <strong>Important:</strong> Print each share separately and distribute to different people or locations.
+                    Any ${threshold} shares can reconstruct your secret. Keep them safe!
+                </div>
+                ${shareStrings.map((shareStr, i) => `
+                    <div class="share-card">
+                        <h3>Share ${i + 1} of ${totalShares}</h3>
+                        <div class="share-qr" id="qr-${i}"></div>
+                        <div class="share-data">${shareStr}</div>
+                        <div class="share-info">
+                            Requires ${threshold} of ${totalShares} shares to reconstruct |
+                            Reconstruct at: ${decryptUrl}
+                        </div>
+                    </div>
+                `).join('')}
+                <button class="print-button" onclick="window.print()">Print All Shares</button>
+                <div class="link dont-print" style="margin-top: 15px;">
+                    <a href="shamir-decrypt.html">Go to Reconstruct Page</a> |
+                    <a href="shamir-encrypt.html">Split Another Secret</a>
+                </div>
+            `;
+
+            // Generate QR codes for each share
+            shareStrings.forEach((shareStr, i) => {
+                const qrUrl = decryptUrl + '#' + encodeURIComponent(shareStr);
+                new QRCode(document.getElementById(`qr-${i}`), {
+                    text: qrUrl,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+            });
+        }
+    </script>
+</body>
+</html>

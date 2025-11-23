@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shamir Reconstruct | OrigamiVault - Encrypted Paper Storage</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="OrigamiVault - Reconstruct Secret">
+    <meta property="og:description" content="Reconstruct your secret from Shamir shares.">
+    <meta property="og:image" content="social.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OrigamiVault - Reconstruct Secret">
+    <meta name="twitter:description" content="Reconstruct your secret from Shamir shares.">
+    <meta name="twitter:image" content="social.png">
+
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #d5b882 0%, #f1ebda 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(116, 85, 48, 0.2);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            max-width: 120px;
+            height: auto;
+            margin: 0 auto 10px;
+        }
+
+        h1 {
+            color: #745530;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 27px;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, #745530 0%, #d5b882 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        h1 .separator {
+            display: inline;
+        }
+
+        h1 .subtitle-text {
+            display: inline;
+            font-size: 27px;
+            background: none;
+            -webkit-text-fill-color: #8b7355;
+            color: #8b7355;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            h1 .separator {
+                display: none;
+            }
+
+            h1 .subtitle-text {
+                display: block;
+                font-size: 19px;
+                font-weight: 600;
+                margin-top: 5px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #745530;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #745530 0%, #d5b882 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .explanation {
+            padding: 15px;
+            background: #f1ebda;
+            border-radius: 8px;
+            color: #745530;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .explanation strong {
+            color: #745530;
+        }
+
+        .shares-list {
+            margin-bottom: 20px;
+        }
+
+        .share-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .share-item.valid {
+            border-color: #28a745;
+            background: #f0fff0;
+        }
+
+        .share-item .share-number {
+            background: #745530;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .share-item .share-info {
+            flex: 1;
+            font-size: 13px;
+            color: #555;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .share-item .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .status-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .status-box.need-more {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-box.ready {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f1ebda;
+            border-radius: 8px;
+        }
+
+        .result-box h3 {
+            color: #745530;
+            margin-bottom: 10px;
+        }
+
+        .result-content {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #d5b882;
+            font-family: 'SF Mono', 'Consolas', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        #reader {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #reader video {
+            border-radius: 8px;
+        }
+
+        .error-msg {
+            color: #dc3545;
+            padding: 10px;
+            background: #f8d7da;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .link a {
+            color: #745530;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #745530;
+        }
+
+        .footer a {
+            color: #745530;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+            </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="logo.png" alt="OrigamiVault Logo" class="logo">
+        </div>
+        <h1><span>OrigamiVault</span><span class="separator"> — </span><span class="subtitle-text">Reconstruct</span></h1>
+
+        <div class="explanation">
+            <strong>Reconstruct your secret:</strong> Scan or paste the required number of shares to reconstruct your original secret. The threshold was set when the secret was split.
+        </div>
+
+        <div id="errorMsg" class="error-msg"></div>
+
+        <div id="statusBox" class="status-box need-more">
+            No shares added yet. Add shares to begin reconstruction.
+        </div>
+
+        <div id="sharesList" class="shares-list"></div>
+
+        <div id="reader"></div>
+        <button id="startScanBtn" onclick="startScanner()">Scan QR Code</button>
+
+        <div style="text-align: center; margin: 20px 0; color: #999;">— or —</div>
+
+        <div class="form-group">
+            <label for="shareInput">Paste Share Data</label>
+            <textarea id="shareInput" placeholder="Paste share data here (e.g., [OV_SSS_1_2_3]base64data...)"></textarea>
+        </div>
+        <button onclick="addPastedShare()">Add Share</button>
+
+        <div id="reconstructBtn" style="display: none; margin-top: 20px;">
+            <button onclick="reconstructSecret()" style="background: #28a745;">Reconstruct Secret</button>
+        </div>
+
+        <div id="resultBox" class="result-box" style="display: none;">
+            <h3>Reconstructed Secret</h3>
+            <div id="resultContent" class="result-content"></div>
+        </div>
+
+        <div class="link">
+            <a href="shamir-encrypt.html">Split a New Secret</a> | <a href="encrypt.html">Password Encryption</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="https://github.com/origamivault/origamivault" target="_blank">OrigamiVault</a> is open source project
+    </div>
+
+    <script>
+        // ============================================
+        // Shamir's Secret Sharing over GF(256)
+        // ============================================
+
+        const EXP_TABLE = new Uint8Array(512);
+        const LOG_TABLE = new Uint8Array(256);
+
+        (function initTables() {
+            let x = 1;
+            for (let i = 0; i < 255; i++) {
+                EXP_TABLE[i] = x;
+                EXP_TABLE[i + 255] = x;
+                LOG_TABLE[x] = i;
+                x = x ^ (x << 1) ^ (x & 0x80 ? 0x11B : 0);
+                x &= 0xFF;
+            }
+            LOG_TABLE[0] = 0;
+        })();
+
+        function gfMul(a, b) {
+            if (a === 0 || b === 0) return 0;
+            return EXP_TABLE[LOG_TABLE[a] + LOG_TABLE[b]];
+        }
+
+        function gfDiv(a, b) {
+            if (b === 0) throw new Error("Division by zero");
+            if (a === 0) return 0;
+            return EXP_TABLE[(LOG_TABLE[a] + 255 - LOG_TABLE[b]) % 255];
+        }
+
+        function gfAdd(a, b) {
+            return a ^ b;
+        }
+
+        function reconstructByte(shares) {
+            let secret = 0;
+            for (let i = 0; i < shares.length; i++) {
+                let numerator = 1;
+                let denominator = 1;
+                for (let j = 0; j < shares.length; j++) {
+                    if (i !== j) {
+                        numerator = gfMul(numerator, shares[j].x);
+                        denominator = gfMul(denominator, gfAdd(shares[i].x, shares[j].x));
+                    }
+                }
+                const lagrange = gfDiv(numerator, denominator);
+                secret = gfAdd(secret, gfMul(shares[i].y, lagrange));
+            }
+            return secret;
+        }
+
+        function combine(shares) {
+            if (shares.length < 2) {
+                throw new Error("Need at least 2 shares to reconstruct");
+            }
+
+            const dataLength = shares[0].data.length;
+            const result = new Uint8Array(dataLength);
+
+            for (let byteIndex = 0; byteIndex < dataLength; byteIndex++) {
+                const byteShares = shares.map(s => ({ x: s.x, y: s.data[byteIndex] }));
+                result[byteIndex] = reconstructByte(byteShares);
+            }
+
+            return result;
+        }
+
+        // ============================================
+        // State Management
+        // ============================================
+
+        let collectedShares = [];
+        let expectedThreshold = null;
+        let expectedTotal = null;
+        let html5QrCode = null;
+
+        // Parse share string: [OV_SSS_{x}_{threshold}_{total}]{base64data}
+        function parseShare(shareStr) {
+            const match = shareStr.match(/^\[OV_SSS_(\d+)_(\d+)_(\d+)\](.+)$/);
+            if (!match) {
+                throw new Error("Invalid share format");
+            }
+
+            const x = parseInt(match[1]);
+            const threshold = parseInt(match[2]);
+            const total = parseInt(match[3]);
+            const base64Data = match[4];
+
+            // Decode base64
+            const binaryStr = atob(base64Data);
+            const data = new Uint8Array(binaryStr.length);
+            for (let i = 0; i < binaryStr.length; i++) {
+                data[i] = binaryStr.charCodeAt(i);
+            }
+
+            return { x, threshold, total, data };
+        }
+
+        function addShare(shareStr) {
+            try {
+                const share = parseShare(shareStr);
+
+                // Check if this share index already exists
+                if (collectedShares.some(s => s.x === share.x)) {
+                    showError(`Share ${share.x} already added`);
+                    return false;
+                }
+
+                // Check compatibility with existing shares
+                if (collectedShares.length > 0) {
+                    if (share.threshold !== expectedThreshold || share.total !== expectedTotal) {
+                        showError("This share is from a different secret (threshold/total mismatch)");
+                        return false;
+                    }
+                    if (share.data.length !== collectedShares[0].data.length) {
+                        showError("This share is from a different secret (data length mismatch)");
+                        return false;
+                    }
+                } else {
+                    expectedThreshold = share.threshold;
+                    expectedTotal = share.total;
+                }
+
+                collectedShares.push(share);
+                updateUI();
+                return true;
+            } catch (e) {
+                showError("Invalid share: " + e.message);
+                return false;
+            }
+        }
+
+        function removeShare(index) {
+            collectedShares.splice(index, 1);
+            if (collectedShares.length === 0) {
+                expectedThreshold = null;
+                expectedTotal = null;
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            // Update shares list
+            const listEl = document.getElementById('sharesList');
+            listEl.innerHTML = collectedShares.map((share, i) => `
+                <div class="share-item valid">
+                    <div class="share-number">${share.x}</div>
+                    <div class="share-info">Share ${share.x} of ${share.total} (threshold: ${share.threshold})</div>
+                    <button class="remove-btn" onclick="removeShare(${i})">×</button>
+                </div>
+            `).join('');
+
+            // Update status
+            const statusEl = document.getElementById('statusBox');
+            const reconstructBtn = document.getElementById('reconstructBtn');
+            const resultBox = document.getElementById('resultBox');
+
+            resultBox.style.display = 'none';
+
+            if (collectedShares.length === 0) {
+                statusEl.className = 'status-box need-more';
+                statusEl.textContent = 'No shares added yet. Add shares to begin reconstruction.';
+                reconstructBtn.style.display = 'none';
+            } else if (collectedShares.length < expectedThreshold) {
+                statusEl.className = 'status-box need-more';
+                statusEl.textContent = `${collectedShares.length} of ${expectedThreshold} shares collected. Need ${expectedThreshold - collectedShares.length} more.`;
+                reconstructBtn.style.display = 'none';
+            } else {
+                statusEl.className = 'status-box ready';
+                statusEl.textContent = `${collectedShares.length} shares collected. Ready to reconstruct!`;
+                reconstructBtn.style.display = 'block';
+            }
+
+            hideError();
+        }
+
+        function reconstructSecret() {
+            try {
+                const result = combine(collectedShares);
+                const decoder = new TextDecoder();
+                const secret = decoder.decode(result);
+
+                document.getElementById('resultContent').textContent = secret;
+                document.getElementById('resultBox').style.display = 'block';
+
+                // Auto-refresh after 1 minute for security
+                setTimeout(() => window.location.reload(), 60000);
+            } catch (e) {
+                showError("Reconstruction failed: " + e.message);
+            }
+        }
+
+        // ============================================
+        // QR Scanner
+        // ============================================
+
+        function startScanner() {
+            const reader = document.getElementById('reader');
+            const startBtn = document.getElementById('startScanBtn');
+
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => {
+                    startBtn.textContent = 'Scan QR Code';
+                });
+                return;
+            }
+
+            html5QrCode = new Html5Qrcode("reader");
+
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                (decodedText) => {
+                    // Extract share from URL hash if present
+                    let shareData = decodedText;
+                    if (decodedText.includes('#')) {
+                        shareData = decodeURIComponent(decodedText.split('#')[1]);
+                    }
+
+                    if (shareData.startsWith('[OV_SSS_')) {
+                        if (addShare(shareData)) {
+                            // Brief pause before continuing scan
+                            html5QrCode.pause();
+                            setTimeout(() => {
+                                if (html5QrCode.getState() === Html5QrcodeScannerState.PAUSED) {
+                                    html5QrCode.resume();
+                                }
+                            }, 1500);
+                        }
+                    }
+                },
+                () => {} // Ignore scan errors
+            ).then(() => {
+                startBtn.textContent = 'Stop Scanning';
+            }).catch(err => {
+                showError("Camera error: " + err);
+            });
+        }
+
+        function addPastedShare() {
+            const input = document.getElementById('shareInput');
+            let shareData = input.value.trim();
+
+            // Handle URL with hash
+            if (shareData.includes('#')) {
+                shareData = decodeURIComponent(shareData.split('#')[1]);
+            }
+
+            if (addShare(shareData)) {
+                input.value = '';
+            }
+        }
+
+        // ============================================
+        // UI Helpers
+        // ============================================
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        // Check for share in URL hash on page load
+        window.addEventListener('load', () => {
+            if (window.location.hash) {
+                const shareData = decodeURIComponent(window.location.hash.substring(1));
+                if (shareData.startsWith('[OV_SSS_')) {
+                    addShare(shareData);
+                    // Clear hash to prevent re-adding on refresh
+                    history.replaceState(null, null, window.location.pathname);
+                }
+            }
+        });
+
+        // Allow Enter key in paste input
+        document.getElementById('shareInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addPastedShare();
+            }
+        });
+    </script>
+</body>
+</html>
