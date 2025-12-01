@@ -9,12 +9,12 @@ Nothing is uploaded or stored online. Everything runs locally in your browser.
 
 ![1116](https://github.com/user-attachments/assets/8a6c070e-3a5e-44d9-9110-1770f3de021c)
 
-
 👉 **Video Demo:** https://www.youtube.com/watch?v=zzQkq5Qjri8
 
 Perfect for backing up **master passwords**, **crypto private keys**, **2FA seeds**, **recovery phrases**, and **emergency access information**.
 
 ### Codebase mirrors
+
 👉 **GitHub:** https://github.com/origamivault/origamivault
 
 👉 **GitLab mirror:** https://gitlab.com/origamivault/origamivault
@@ -173,3 +173,11 @@ This ensures decryption works even if GitHub and GitLab are offline.
 ## 📝 License
 
 MIT License — free to use, modify, and redistribute.
+
+---
+
+## Contributors
+
+![@knagode](https://github.com/knagode)
+![@shollyethan](https://github.com/shollyethan)
+![https://github.com/selfhst](https://github.com/selfhst)

@@ -6,24 +6,30 @@
     <title>Encrypt content | OrigamyVault - Encrypt & Store on Paper</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/svg+xml" href="files/logo.svg">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="OrigamiVault — Encrypted Paper Storage">
     <meta property="og:description" content="Offline. Secure. Printable. Recoverable. Encrypt sensitive data and store it on paper using QR codes.">
-    <meta property="og:image" content="social.png">
+    <meta property="og:image" content="files/social.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="OrigamiVault — Encrypted Paper Storage">
     <meta name="twitter:description" content="Offline. Secure. Printable. Recoverable. Encrypt sensitive data and store it on paper using QR codes.">
-    <meta name="twitter:image" content="social.png">
+    <meta name="twitter:image" content="files/social.png">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="files/qrcode.min.js"></script>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;700&display=swap">
     <style>
+        @font-face {
+            font-family: 'Azeret Mono';
+            src: url('files/azeret_mono_regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -459,7 +465,7 @@
 <body>
     <div class="container">
         <div class="logo-container">
-            <a href="encrypt.html"><img src="logo.png" alt="OrigamiVault Logo" class="logo"></a>
+            <a href="encrypt.html"><img src="files/logo.svg" alt="OrigamiVault Logo" class="logo"></a>
         </div>
         <h1><span>OrigamiVault</span><span class="separator"> — </span><span class="subtitle-text">Encrypted Paper Storage</span></h1>
 
