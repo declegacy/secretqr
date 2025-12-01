@@ -6,24 +6,30 @@
     <title>Shamir Split on Paper | OrigamiVault - Encrypted Paper Storage</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/svg+xml" href="files/logo.svg">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="OrigamiVault - Shamir Secret Sharing">
     <meta property="og:description" content="Split your secret into multiple shares. Require K of N shares to reconstruct.">
-    <meta property="og:image" content="social.png">
+    <meta property="og:image" content="files/social.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="OrigamiVault - Shamir Secret Sharing">
     <meta name="twitter:description" content="Split your secret into multiple shares. Require K of N shares to reconstruct.">
-    <meta name="twitter:image" content="social.png">
+    <meta name="twitter:image" content="files/social.png">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="files/qrcode.min.js"></script>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;700&display=swap">
     <style>
+        @font-face {
+            font-family: 'Azeret Mono';
+            src: url('files/azeret_mono_regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -369,7 +375,7 @@
 <body>
     <div class="container">
         <div class="logo-container dont-print">
-            <a href="encrypt.html"><img src="logo.png" alt="OrigamiVault Logo" class="logo"></a>
+            <a href="encrypt.html"><img src="files/logo.svg" alt="OrigamiVault Logo" class="logo"></a>
         </div>
         <h1><span>OrigamiVault</span><span class="separator"> — </span><span class="subtitle-text">Shamir Split on Paper</span></h1>
 
