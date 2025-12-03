@@ -1,27 +1,28 @@
 # 🔐 OrigamiVault — Encrypted Paper Storage
 
-**“Like writing your secret (e.g. master password) on paper — but only your loved ones can read it.”**
+**“Like writing your secret (e.g. master password) on paper — but only your loved ones can read it in case of emergency or death.”**
 
-OrigamiVault is a tiny offline web app for **encrypting or splitting secrets** and printing them as **QR codes** and **OCR-friendly text**.  
-Nothing is uploaded or stored online — everything runs locally in your browser.
+OrigamiVault is a tiny offline web app for **encrypting or splitting secrets** and printing them as **QR codes** and **OCR-friendly text**. 
 
 👉 **Live app:** https://origamivault.github.io/origamivault/  
 👉 **Video demo:** https://www.youtube.com/watch?v=zzQkq5Qjri8  
 
 ![1116](https://github.com/user-attachments/assets/8a6c070e-3a5e-44d9-9110-1770f3de021c)
 
-Perfect for **master passwords**, **crypto keys**, **2FA seeds**, **recovery phrases**, and **digital legacy planning**.
+Nothing is uploaded or stored online — everything runs locally in your browser.
+Perfect tool for strategic recovery of **master passwords**, **crypto keys**, **2FA seeds**, **recovery phrases**, and **digital legacy planning**.
 
 ---
 
 ## ✨ Why Paper?
 
-Digital storage fails. Devices break, drives die, accounts get locked.  
+Digital storage fails. Devices get hacked. Devices break, drives die, accounts get locked. 
+
 Paper, stored safely, can last for decades.
 
 ---
 
-## 🔐 Example Use Case: Emergency Recovery
+## 🔐 Example Use Case: Emergency Recovery in case of death
 
 A simple way to ensure your loved ones can recover your master password **without exposing it to anyone else**:
 
