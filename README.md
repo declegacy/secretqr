@@ -42,7 +42,7 @@ A simple way to ensure your loved ones can recover your master password **withou
 
 ✅ **Result:** No single point of failure — but recovery is possible when it truly matters.
 
-<img width="836" height="514" alt="origamivault_comic (1)" src="https://github.com/user-attachments/assets/07c44ff2-3c64-4fef-b0c7-ca247e5b211b" />
+<img width="1288" height="810" alt="Gemini_Generated_Image_nrjnehnrjnehnrjn (2)" src="https://github.com/user-attachments/assets/8029c102-f9a6-4ecc-89d1-dcb06679c3a6" />
 
 ---
 
