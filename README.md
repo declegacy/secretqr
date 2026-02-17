@@ -90,6 +90,7 @@ OrigamiVault **never** sends or stores your secrets anywhere.
 
 - Fork this repo and enable GitHub Pages (deploy from `main`), or  
 - Download the ZIP and host the static files anywhere / keep on USB
+- Use Docker images to run a lightweight web server for easy deployment
 
 ---
 
