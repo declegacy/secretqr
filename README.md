@@ -110,6 +110,7 @@ MIT License — free to use, modify, and redistribute.
 ## 👥 Contributors
 
 [@knagode](https://github.com/knagode)  
+[@debben80](https://github.com/debben80)  
 [@Dalewn](https://github.com/Dalewn)  
 [@shollyethan](https://github.com/shollyethan)  
 [@selfhst](https://github.com/selfhst)
