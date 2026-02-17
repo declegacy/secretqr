@@ -5,30 +5,17 @@ on:
     branches:
       - main
     paths:
-      - 'README.md'
+      - "README.md"
 
 jobs:
   update-readme:
     name: Update Docker Hub README
     runs-on: ubuntu-latest
     steps:
-      - name: Check Docker Hub credentials
-        id: dockerhub
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        run: |
-          if [ -z "$DOCKERHUB_USERNAME" ]; then
-            echo "DOCKERHUB_USERNAME is not set, skipping"
-            exit 0
-          fi
-          echo "available=true" >> $GITHUB_OUTPUT
-
       - name: Checkout repository
-        if: steps.dockerhub.outputs.available == 'true'
         uses: actions/checkout@v6
 
       - name: Update Docker Hub README
-        if: steps.dockerhub.outputs.available == 'true'
         uses: peter-evans/dockerhub-description@v5
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
