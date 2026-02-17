@@ -1,8 +1,11 @@
-FROM nginx:1.29.5-alpine
+FROM busybox:1.37.0-musl
 
-COPY *.html /usr/share/nginx/html/
-COPY files/ /usr/share/nginx/html/files/
-COPY misc/ /usr/share/nginx/html/misc/
+RUN adduser -D origamivault
+USER origamivault
+WORKDIR /home/origamivault
+COPY . .
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget -qO- http://localhost:8080/ > /dev/null || exit 1
+CMD ["busybox", "httpd", "-f", "-v", "-p", "8080"]
