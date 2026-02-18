@@ -31,7 +31,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check if Docker Hub secrets exist
+        id: check_dockerhub_secrets
+        run: |
+          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ] || [ -z "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+            echo "dockerhub_secrets_exist=false" >> $GITHUB_OUTPUT
+          else
+            echo "dockerhub_secrets_exist=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Log in to Docker Hub
+        if: steps.check_dockerhub_secrets.outputs.dockerhub_secrets_exist == 'true'
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY_DOCKERHUB }}
@@ -44,7 +54,7 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}
-            ${{ env.REGISTRY_DOCKERHUB }}/${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
+            ${{ steps.check_dockerhub_secrets.outputs.dockerhub_secrets_exist == 'true' && format('{0}/{1}/{2}', env.REGISTRY_DOCKERHUB, secrets.DOCKERHUB_USERNAME, github.event.repository.name) || '' }}
           tags: |
             type=semver,pattern={{version}}
             type=raw,value=latest

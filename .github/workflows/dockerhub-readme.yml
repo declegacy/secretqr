@@ -15,10 +15,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Check if secrets exist
+        id: check_secrets
+        run: |
+          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ] || [ -z "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+            echo "secrets_exist=false" >> $GITHUB_OUTPUT
+          else
+            echo "secrets_exist=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Update Docker Hub README
+        if: steps.check_secrets.outputs.secrets_exist == 'true'
         uses: peter-evans/dockerhub-description@v5
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
           readme-filepath: ./README.md
+
+      - name: Secrets not defined
+        if: steps.check_secrets.outputs.secrets_exist == 'false'
+        run: echo "Docker Hub secrets not defined, skipping README update."
