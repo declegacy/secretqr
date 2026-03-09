@@ -50,7 +50,7 @@ jobs:
 
       - name: Extract metadata for main branch
         id: meta-main
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: |
             ${{ env.REGISTRY_GHCR }}/${{ env.IMAGE_NAME }}
